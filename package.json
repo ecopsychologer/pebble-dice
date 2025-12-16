@@ -25,7 +25,48 @@
       "ACCESS_TOKEN"
     ],
     "resources": {
-      "media": []
+      "media": [
+        {
+          "type": "png",
+          "name": "IMAGE_D4",
+          "file": "images/d4.png"
+        },
+        {
+          "type": "png",
+          "name": "IMAGE_D6",
+          "file": "images/d6.png"
+        },
+        {
+          "type": "png",
+          "name": "IMAGE_D8",
+          "file": "images/d8.png"
+        },
+        {
+          "type": "png",
+          "name": "IMAGE_D10",
+          "file": "images/d10.png"
+        },
+        {
+          "type": "png",
+          "name": "IMAGE_D12",
+          "file": "images/d12.png"
+        },
+        {
+          "type": "png",
+          "name": "IMAGE_D20",
+          "file": "images/d20.png"
+        },
+        {
+          "type": "png",
+          "name": "IMAGE_D100",
+          "file": "images/d100.png"
+        },
+        {
+          "type": "png",
+          "name": "IMAGE_PLACEHOLDER",
+          "file": "images/placeholder.png"
+        }
+      ]
     }
   }
 }
