@@ -1,12 +1,12 @@
 {
-  "name": "Lockitron One Click",
-  "author": "MakeAwesomeHappen",
-  "version": "1.0.0",
+  "name": "Pebble Dice",
+  "author": "ecopsychologer",
+  "version": "0.5.0",
   "keywords": ["pebble-app"],
   "private": true,
   "dependencies": {},
   "pebble": {
-    "displayName": "Lockitron",
+    "displayName": "Dice Roller",
     "uuid": "60dac362-3888-436d-96d2-17cb9d585033",
     "sdkVersion": "3",
     "enableMultiJS": true,
@@ -60,11 +60,6 @@
           "type": "png",
           "name": "IMAGE_D100",
           "file": "images/d100.png"
-        },
-        {
-          "type": "png",
-          "name": "IMAGE_PLACEHOLDER",
-          "file": "images/placeholder.png"
         }
       ]
     }

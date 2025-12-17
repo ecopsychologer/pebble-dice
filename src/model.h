@@ -3,7 +3,7 @@
 #include <pebble.h>
 
 #define MAX_DICE_GROUPS 8
-#define MAX_DICE_PER_GROUP 10
+#define MAX_DICE_PER_GROUP 64
 #define MAX_RESULTS_PER_GROUP MAX_DICE_PER_GROUP
 
 typedef enum {
@@ -52,6 +52,7 @@ bool model_has_groups(const DiceModel *model);
 void model_begin_roll(DiceModel *model);
 bool model_has_roll_remaining(const DiceModel *model);
 int model_current_roll_sides(const DiceModel *model);
+int model_current_roll_range(const DiceModel *model);
 void model_commit_roll_result(DiceModel *model, int value);
 int model_roll_completed_dice(const DiceModel *model);
 int model_roll_total_dice(const DiceModel *model);
@@ -63,3 +64,7 @@ int model_group_sides(const DiceGroup *group);
 
 void model_reset_selection_count(DiceModel *model);
 const char *model_current_roll_label(const DiceModel *model);
+DiceKind model_current_roll_kind(const DiceModel *model);
+int model_kind_roll_sides(DiceKind kind);
+bool model_kind_zero_based(DiceKind kind);
+bool model_kind_tens_mode(DiceKind kind);

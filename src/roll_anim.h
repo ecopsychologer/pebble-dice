@@ -15,3 +15,4 @@ void roll_anim_deinit(void);
 void roll_anim_start(int sides);
 void roll_anim_skip(void);
 bool roll_anim_is_running(void);
+int roll_anim_progress_per_mille(void);

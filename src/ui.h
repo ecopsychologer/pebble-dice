@@ -7,12 +7,12 @@
 
 #define UI_HINT_TEXT_LENGTH 12
 
+// Bundles up everything the UI needs to know about the state machine. Changing
+// hints/flags here means you only need to touch state.c when prototyping flows.
 typedef struct {
   AppState state;
   int rolling_value;
-  bool skip_hint;
-  bool is_animating;
-  bool skip_requested;
+  int anim_progress_per_mille;
   bool confirm_clear_prompt;
   char hint_top[UI_HINT_TEXT_LENGTH];
   char hint_middle[UI_HINT_TEXT_LENGTH];

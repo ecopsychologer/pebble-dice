@@ -18,4 +18,5 @@ void state_handle_select_long(void);
 void state_handle_back(void);
 void state_handle_up(void);
 void state_handle_down(void);
+void state_handle_down_long(void);
 void state_handle_tap(void);

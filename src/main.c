@@ -26,12 +26,17 @@ static void prv_down_click_handler(ClickRecognizerRef recognizer, void *context)
   state_handle_down();
 }
 
+static void prv_down_long_click_handler(ClickRecognizerRef recognizer, void *context) {
+  state_handle_down_long();
+}
+
 static void prv_click_config_provider(void *context) {
   window_single_click_subscribe(BUTTON_ID_SELECT, prv_select_click_handler);
   window_long_click_subscribe(BUTTON_ID_SELECT, 600, prv_select_long_click_handler, NULL);
   window_single_click_subscribe(BUTTON_ID_BACK, prv_back_click_handler);
   window_single_click_subscribe(BUTTON_ID_UP, prv_up_click_handler);
   window_single_click_subscribe(BUTTON_ID_DOWN, prv_down_click_handler);
+  window_long_click_subscribe(BUTTON_ID_DOWN, 600, prv_down_long_click_handler, NULL);
 }
 
 static void prv_accel_tap_handler(AccelAxisType axis, int32_t direction) {
