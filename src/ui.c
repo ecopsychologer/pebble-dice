@@ -94,11 +94,23 @@ static void prv_configure_text_layer(TextLayer *layer, GTextAlignment alignment,
 }
 
 // Format helpers keep summary/picker UI logic lightweight and in one place.
+static void prv_format_count_label(int count, const char *label, char *buffer, size_t size) {
+  if (!buffer || size == 0) {
+    return;
+  }
+  const char *safe_label = label ? label : "";
+  if (count <= 1) {
+    snprintf(buffer, size, "%s", safe_label);
+  } else {
+    snprintf(buffer, size, "%d%s", count, safe_label);
+  }
+}
+
 static void prv_format_group_line(const DiceModel *model, char *buffer, size_t size) {
   buffer[0] = '\0';
   const int group_total = model_group_count(model);
   if (group_total == 0) {
-    snprintf(buffer, size, "%d%s", model_get_selected_count(model), model_get_selected_label(model));
+    prv_format_count_label(model_get_selected_count(model), model_get_selected_label(model), buffer, size);
     return;
   }
 
@@ -108,8 +120,10 @@ static void prv_format_group_line(const DiceModel *model, char *buffer, size_t s
     if (!group) {
       continue;
     }
+    char entry[16];
+    prv_format_count_label(group->count, model_group_label(group), entry, sizeof(entry));
     const char *prefix = (used == 0) ? "" : ", ";
-    used += snprintf(buffer + used, (used < size) ? size - used : 0, "%s%dd%d", prefix, group->count, group->sides);
+    used += snprintf(buffer + used, (used < size) ? size - used : 0, "%s%s", prefix, entry);
     if (used >= size) {
       break;
     }
@@ -273,49 +287,6 @@ static int prv_group_total(const DiceGroup *group) {
   return total;
 }
 
-static void prv_draw_bitmap_centered(GContext *ctx, GBitmap *bitmap, GRect rect) {
-  if (!bitmap) {
-    return;
-  }
-  const GSize bmp_size = gbitmap_get_bounds(bitmap).size;
-  GRect target = rect;
-  if (bmp_size.w < rect.size.w) {
-    target.origin.x += (rect.size.w - bmp_size.w) / 2;
-    target.size.w = bmp_size.w;
-  }
-  if (bmp_size.h < rect.size.h) {
-    target.origin.y += (rect.size.h - bmp_size.h) / 2;
-    target.size.h = bmp_size.h;
-  }
-  graphics_draw_bitmap_in_rect(ctx, bitmap, target);
-}
-
-static int prv_draw_group_icons(GContext *ctx, const DiceGroup *group, int y_start, int width) {
-  if (!group) {
-    return y_start;
-  }
-  const int dice = group->count;
-  if (dice <= 0) {
-    return y_start;
-  }
-  const int columns = dice < SLOT_COLUMNS ? dice : SLOT_COLUMNS;
-  const int icon_width = (width - (columns + 1) * SLOT_SPACING) / columns;
-  const int size = CLAMP(icon_width, ICON_MIN_SIZE, ICON_MAX_SIZE);
-  int y = y_start;
-
-  for (int d = 0; d < dice; ++d) {
-    const int column = d % columns;
-    const int row = d / columns;
-    const int slot_x = SLOT_SPACING + column * (size + SLOT_SPACING);
-    const int slot_y = y + row * (size + SLOT_SPACING);
-    GRect slot_rect = GRect(slot_x, slot_y, size, size);
-    GBitmap *bmp = prv_get_die_bitmap(group->die_def_index);
-    prv_draw_bitmap_centered(ctx, bmp, slot_rect);
-  }
-
-  const int rows = (dice + columns - 1) / columns;
-  return y + rows * (size + SLOT_SPACING) + SLOT_SPACING;
-}
 
 static void prv_draw_result_slots(GContext *ctx, const DiceGroup *group, int g_index, int *y_ref, int width) {
   if (!group) {
@@ -410,7 +381,7 @@ static void prv_slots_update_proc(Layer *layer, GContext *ctx) {
         continue;
       }
       char label[32];
-      snprintf(label, sizeof(label), "%d%s", group->count), model_group_label(group);
+      prv_format_count_label(group->count, model_group_label(group), label, sizeof(label));
       GRect label_rect = GRect(SLOT_SPACING, y, width - SLOT_SPACING * 2, 18);
       graphics_context_set_text_color(ctx, GColorBlack);
       graphics_draw_text(ctx,
@@ -421,7 +392,7 @@ static void prv_slots_update_proc(Layer *layer, GContext *ctx) {
                          GTextAlignmentLeft,
                          NULL);
       y += 18 + SLOT_SPACING;
-      y = prv_draw_group_icons(ctx, group, y, width);
+      y += SLOT_SPACING;
     }
   } else if (s_active_view.state == ROLLING || s_active_view.state == RESULTS) {
     for (int g = 0; g < model_group_count(s_active_model); ++g) {
